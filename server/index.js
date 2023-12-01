@@ -1,5 +1,4 @@
 const app = require('./app');
-const mainRouter = require('./routes/index');
 const {conn} = require('./DB_connection');
 
 const PORT = process.env.PORT || 3001;
