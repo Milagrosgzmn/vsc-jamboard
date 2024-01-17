@@ -3,6 +3,8 @@ import validation from './validation';
 import axios from 'axios';
 import Swal from "sweetalert2";
 
+import {useNavigate} from 'react-router-dom'
+
 export default function SignUp() {
     const [errors, setErrors] = useState({});
     const [userData, setUserData]= useState({
@@ -11,35 +13,48 @@ export default function SignUp() {
         username:''//agregar a validation
     });
 
+    const navigate = useNavigate();
+
     function handleChange(event){
-        setUserData({
-            ...userData,
-            [event.target.name]: `${event.target.value}`
-        });
-        setErrors(
-            validation({
-            ...userData,
-            [event.target.name]: `${event.target.value}`
+        const { name, value } = event.target;
+        const fieldErrors = validation({ [name]: value });
+    
+        setErrors(prevErrors => ({
+            ...prevErrors,
+            [name]: fieldErrors[name]
+        }));
+
+        setUserData(prevUserData => ({
+        ...prevUserData,
+        [name]: value
         }));
     }
     function submitHandler (e){
         e.preventDefault();
         if(!errors.email && !errors.password && !errors.username){
-            axios.post('/signup',
-                userData).then(({data})=>{
+            axios.post('/signUp',
+                {user:userData},
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',}
+                }).then(({data})=>{
                 if(data){
+                    console.log(data)
                     Swal.fire(
                         '¡Excelente!',
                         '¡Te registraste con exito!',
                         'success'
-                      )
+                    )
+                    navigate('/home')
                 }
             }).catch(error=>{
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Hubo un error',
+                    text: error.response.data.errors,
                   })
+                  //aqui seria catchear el error y setearlo
                 console.error(error);
             });
             
