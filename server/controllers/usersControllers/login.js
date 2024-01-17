@@ -1,5 +1,4 @@
 const {Users} = require('../../DB_connection');
-const bcrypt = require('bcrypt');
 const createToken = require('../createToken');
 const login = async (req, res)=>{
 
@@ -11,11 +10,13 @@ const login = async (req, res)=>{
 
         const user = await Users.login(email, password);
         const token = createToken(user.id)
-        return res.status(200).json({user, token})
+
+        res.cookie('jwt',token,{httpOnly: true,maxAge:timeExp*1000})
+        return res.status(200).json(user)
         
     } catch (error) {
         console.error(error.message);
-        return res.status(400).json(error.message);
+        return res.status(400).json({errors: error.message});
     }
 }
 
