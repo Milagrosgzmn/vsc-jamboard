@@ -34,8 +34,8 @@ module.exports = (sequelize)=>{
     Users.signUp = async function (email,password, username) {
         const alreadyExists = await this.findOne({where:{email}});
         const usernameInUse = await this.findOne({where:{username}});
-        if(alreadyExists) throw Error('Email already in use');
-        if(usernameInUse) throw Error('Username already in use');
+        if(alreadyExists) throw Error('Email previamente registrado.');
+        if(usernameInUse) throw Error('Nombre de usuario ya registrado.');
 
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -49,7 +49,7 @@ module.exports = (sequelize)=>{
     
       Users.login = async function(email, password){
         const user = await Users.findOne({where:{email}});
-        if (!user) throw Error('User not found');
+        if (!user) throw Error('Usuario o contraseña incorrectos.');
         const doesMatch = await bcrypt.compare(password,user.password);
         const userWithoutPassword = {
             id:user.id,
@@ -60,7 +60,7 @@ module.exports = (sequelize)=>{
         if (doesMatch) {
             return userWithoutPassword;
         } else {
-            throw Error('Wrong');   
+            throw Error('Usuario o contraseña incorrectos.');   
         }
       }
 
