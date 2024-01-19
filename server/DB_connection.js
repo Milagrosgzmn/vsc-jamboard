@@ -20,6 +20,20 @@ const {Users, Jamboards} = sequelize.models;
 Users.belongsToMany(Jamboards, {through: 'userBoard'});
 Jamboards.belongsToMany(Users, {through: 'userBoard'});
 
+Users.belongsToMany(Users, {
+    as:'friend_as_user',
+    through: 'Contact',
+    foreignKey:'user_id',
+    otherKey:'friend_id'
+});
+Users.belongsToMany(Users, {
+    as:'friends_as_friend',
+    through: 'Contact',
+    foreignKey:'friend_id',
+    otherKey:'user_id'
+});
+
+
 module.exports = {
     Users,
     Jamboards,
