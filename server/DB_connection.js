@@ -1,8 +1,8 @@
 require('dotenv').config();
 const {Sequelize} =  require('sequelize');
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DATABASE_URL} = process.env;
-
-//importar modelos
+const userModel = require('./models/user');
+const jamModel = require('./models/jamboard');
 
 const conection = DATABASE_URL || `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`;
 
@@ -12,12 +12,30 @@ const sequelize = new Sequelize(`${conection}`, {
     ssl: true
 })
 
-// modelo importado (sequelize)
+userModel(sequelize);
+jamModel(sequelize);
 
-// const { extraigo models} = sequelize.models;
+const {Users, Jamboards} = sequelize.models;
 
-// hago relaciones n:m 1:1 1:N
+Users.belongsToMany(Jamboards, {through: 'userBoard'});
+Jamboards.belongsToMany(Users, {through: 'userBoard'});
+
+Users.belongsToMany(Users, {
+    as:'friend_as_user',
+    through: 'Contact',
+    foreignKey:'user_id',
+    otherKey:'friend_id'
+});
+Users.belongsToMany(Users, {
+    as:'friends_as_friend',
+    through: 'Contact',
+    foreignKey:'friend_id',
+    otherKey:'user_id'
+});
+
+
 module.exports = {
-    //exporto modelos
+    Users,
+    Jamboards,
     conn: sequelize,
 };
