@@ -48,7 +48,7 @@ module.exports = (sequelize)=>{
       };    
     
       Users.login = async function(email, password){
-        const user = await Users.findOne({where:{email}});
+        const user = await this.findOne({where:{email}});
         if (!user) throw Error('Usuario o contraseña incorrectos.');
         const doesMatch = await bcrypt.compare(password,user.password);
         const userWithoutPassword = {
@@ -63,6 +63,17 @@ module.exports = (sequelize)=>{
             throw Error('Usuario o contraseña incorrectos.');   
         }
       }
+
+      Users.addNewContact = async function(user_id, friend_id){
+        try {
+            const user = await this.findByPk(user_id);
+            await user.addFriendAsUser(friend_id);
+            return null; 
+          } catch (error) {
+            console.error("Error adding contact:", error.message);
+            throw error;
+          }
+      } 
 
     return Users;
 }
