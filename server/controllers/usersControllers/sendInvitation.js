@@ -4,7 +4,9 @@ const sendInvitation = async(req, res)=>{
     const {user_id, friend_id} = req.body;
 
     try {
-        if(!user_id || ! friend_id) throw new Error('Missing Data');
+        if(!user_id || ! friend_id){
+            return res.status(400).json({ errors: 'Missing Data' });
+        }
 
         const isAlreadyContact = await Contacts.isAlreadyContact(user_id, friend_id);
         if (isAlreadyContact) {

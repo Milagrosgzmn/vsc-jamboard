@@ -5,7 +5,7 @@ module.exports = (sequelize)=>{
         
     }
     )  
-    Contacts.isAlreadyContact = async (user_id, friend_id) => {
+    Contacts.isAlreadyContact = async function(user_id, friend_id){
         try {
           const existingContact = await this.findOne({
             where: {
