@@ -75,5 +75,17 @@ module.exports = (sequelize)=>{
           }
       } 
 
+      Users.getContacts = async(user_id)=>{
+        try {
+          const user = await this.findByPk(user_id);
+          if(!user)throw new Error('Información incorrecta')
+          const contacts = await user.getFriendsAsUser();
+  
+          return contacts;
+        } catch (error) {
+          console.error("Error getting contacts:", error.message);
+            throw error;
+        }
+      }
     return Users;
 }
