@@ -3,6 +3,7 @@ const {Sequelize} =  require('sequelize');
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DATABASE_URL} = process.env;
 const userModel = require('./models/user');
 const jamModel = require('./models/jamboard');
+const contactModel = require('./models/contact');
 
 const conection = DATABASE_URL || `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`;
 
@@ -14,27 +15,29 @@ const sequelize = new Sequelize(`${conection}`, {
 
 userModel(sequelize);
 jamModel(sequelize);
+contactModel(sequelize)
 
-const {Users, Jamboards} = sequelize.models;
+const {Users, Jamboards, Contacts} = sequelize.models;
 
 Users.belongsToMany(Jamboards, {through: 'userBoard'});
 Jamboards.belongsToMany(Users, {through: 'userBoard'});
 
 Users.belongsToMany(Users, {
-    as:'friend_as_user',
-    through: 'Contact',
+    as:'friendsAsUser',
+    through: Contacts,
     foreignKey:'user_id',
     otherKey:'friend_id'
 });
 Users.belongsToMany(Users, {
-    as:'friends_as_friend',
-    through: 'Contact',
+    as:'friendsAsFriend',
+    through: Contacts,
     foreignKey:'friend_id',
     otherKey:'user_id'
 });
 
 
 module.exports = {
+    Contacts,
     Users,
     Jamboards,
     conn: sequelize,
