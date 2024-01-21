@@ -75,7 +75,7 @@ module.exports = (sequelize)=>{
           }
       } 
 
-      Users.getContacts = async(user_id)=>{
+      Users.getContacts = async function(user_id){
         try {
           const user = await this.findByPk(user_id);
           if(!user)throw new Error('Información incorrecta')
@@ -86,6 +86,21 @@ module.exports = (sequelize)=>{
           console.error("Error getting contacts:", error.message);
             throw error;
         }
+      }
+
+      Users.deleteContact = async function(user_id, contact_id){
+        try {
+            const user = await this.findByPk(user_id);
+            const contactToRemove = await this.findByPk(contact_id);
+
+            if(!user && !contactToRemove) throw new Error('Información incorrecta')
+                await user.removeFriendsAsUser(contactToRemove);
+            const contacts = await user.getFriendsAsUser();
+            return contacts;
+          } catch (error) {
+            console.error("Error removing contact:", error.message);
+              throw error;
+          }
       }
     return Users;
 }
