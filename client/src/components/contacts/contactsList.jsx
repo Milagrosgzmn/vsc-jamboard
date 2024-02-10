@@ -3,38 +3,13 @@ import Contact from "./contact"
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
+import { useSelector } from "react-redux";
 
 export default function ContactsList() {
 
-const defaultList = [
-    {
-        username: 'Luci12'
-    },
-    {
-        username: 'Mili24'
-    },
-    {
-        username: 'Locky24'
-    },
-    {
-        username: 'Luqui24'
-    },
-    {
-        username: 'Molly24'
-    },
-    {
-        username: 'Ringo24'
-    },
-    {
-        username: 'Zira24'
-    },
-    {
-        username: 'Nelly24'
-    },
-    {
-        username: 'Luci210'
-    },
-]
+    const contacts = useSelector(state=>{
+        return state.user.contacts;
+    })
 
     const [visibleContacts, setVisibleContacts] = useState(4)
     const [start, setStart] = useState(0);
@@ -65,7 +40,7 @@ const defaultList = [
     },[visibleContacts])
 
     const handleNext = ()=>{
-        if(end>defaultList.length){
+        if(end>contacts.length){
             setStart(0)
             setEnd(visibleContacts)
             return
@@ -86,17 +61,19 @@ const defaultList = [
             </div>
 
             <div className="relative flex items-center">
-            <div className="absolute left-2 rounded-full bg-black/20 cursor-pointer" onClick={handlePrev}>
-                        <ArrowLeftRoundedIcon/>
-                    </div>
-                    <div className="absolute right-2 rounded-full bg-black/20 cursor-pointer" onClick={handleNext}>
-                        <ArrowRightRoundedIcon/>
-                    </div> 
-                <div className=" bg-red-300 w-90 h-40 flex items-center p-8 justify-around">
-                    
-                    {defaultList.slice(start, end).map((contact, i) =>(
-                        <Contact key={i} contact={contact} />
-                    ))}
+                <div className="absolute left-0 rounded-full bg-black/20 cursor-pointer" onClick={handlePrev}>
+                    <ArrowLeftRoundedIcon/>
+                </div>
+                <div className="absolute right-0 rounded-full bg-black/20 cursor-pointer" onClick={handleNext}>
+                    <ArrowRightRoundedIcon/>
+                </div> 
+                <div className=" mx-auto w-11/12">
+                    <article className="w-full h-40 flex items-center">
+                        
+                        {contacts.slice(start, end).map((contact, i) =>(
+                            <Contact key={i} contact={contact} />
+                        ))}
+                    </article>
                 </div>
             </div>
             
