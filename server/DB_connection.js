@@ -23,13 +23,13 @@ Users.belongsToMany(Jamboards, {through: 'userBoard'});
 Jamboards.belongsToMany(Users, {through: 'userBoard'});
 
 Users.belongsToMany(Users, {
-    as:'friendsAsUser',
+    as:'contact',
     through: Contacts,
     foreignKey:'user_id',
     otherKey:'friend_id'
 });
 Users.belongsToMany(Users, {
-    as:'friendsAsFriend',
+    as:'contactAsFriend',
     through: Contacts,
     foreignKey:'friend_id',
     otherKey:'user_id'
