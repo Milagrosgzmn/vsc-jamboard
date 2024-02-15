@@ -11,7 +11,7 @@ const login = async (req, res)=>{
         const user = await Users.login(email, password);
         const token = createToken(user.id)
 
-        res.cookie('jwt',token,{httpOnly: true,maxAge:timeExp*1000})
+        res.cookie('jwt',token,{httpOnly: true,maxAge:timeExp})
         return res.status(200).json(user)
         
     } catch (error) {
