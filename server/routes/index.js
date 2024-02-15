@@ -12,6 +12,7 @@ const requireAuth = require('../middlewares/authenticationToken');
 const deleteContact = require('../controllers/usersControllers/deleteContact');
 const postBoard = require('../controllers/boardControllers/postBoard');
 const modifyBoard = require('../controllers/boardControllers/modifyBoard');
+const addContributor = require('../controllers/boardControllers/addContributorToBoard');
 
 
 //rutas
@@ -30,7 +31,7 @@ mainRouter.post('/contact/add', addContact)
 // boards
 mainRouter.post('/board/new', postBoard)
 mainRouter.put('/board/:board_id', modifyBoard)
-//mainRouter.put('/board/contributor/:user_id', addContributor)
+mainRouter.put('/board/contributor/:user_id', addContributor)
 //mainRouter.delete('/board/:board_id', deleteBoard)
 
 module.exports = mainRouter;
