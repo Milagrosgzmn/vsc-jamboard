@@ -6,6 +6,7 @@ export const userSlice = createSlice({
         id:'',
         username:'',
         email:'',
+        contacts:[]
     },
     reducers:{
         setUser : (state, action)=>{
@@ -17,9 +18,16 @@ export const userSlice = createSlice({
             state.id = '';
             state.username='';
             state.email = '';
+        },
+        setContacts : (state, action)=>{
+            state.contacts = action.payload;
+        },
+        deleteContact: (state, action)=>{
+            const newContactsList = state.contacts.filter(contact => contact.id !== action.payload);
+            state.contacts = newContactsList;
         }
     }
 });
 
-export const {setUser, resetUser} = userSlice.actions;
+export const {setUser, resetUser, setContacts, deleteContact} = userSlice.actions;
 export default userSlice.reducer;

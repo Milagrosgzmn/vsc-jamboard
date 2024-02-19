@@ -48,7 +48,7 @@ module.exports = (sequelize)=>{
       };    
     
       Users.login = async function(email, password){
-        const user = await Users.findOne({where:{email}});
+        const user = await this.findOne({where:{email}});
         if (!user) throw Error('Usuario o contraseña incorrectos.');
         const doesMatch = await bcrypt.compare(password,user.password);
         const userWithoutPassword = {
@@ -64,5 +64,43 @@ module.exports = (sequelize)=>{
         }
       }
 
+      Users.addNewContact = async function(user_id, friend_id){
+        try {
+            const user = await this.findByPk(user_id);
+            await user.addFriendAsUser(friend_id);
+            return null; 
+          } catch (error) {
+            console.error("Error adding contact:", error.message);
+            throw error;
+          }
+      } 
+
+      Users.getContacts = async function(user_id){
+        try {
+          const user = await this.findByPk(user_id);
+          if(!user)throw new Error('Información incorrecta')
+          const contacts = await user.getFriendsAsUser();
+  
+          return contacts;
+        } catch (error) {
+          console.error("Error getting contacts:", error.message);
+            throw error;
+        }
+      }
+
+      Users.deleteContact = async function(user_id, contact_id){
+        try {
+            const user = await this.findByPk(user_id);
+            const contactToRemove = await this.findByPk(contact_id);
+
+            if(!user && !contactToRemove) throw new Error('Información incorrecta')
+                await user.removeFriendsAsUser(contactToRemove);
+            const contacts = await user.getFriendsAsUser();
+            return contacts;
+          } catch (error) {
+            console.error("Error removing contact:", error.message);
+              throw error;
+          }
+      }
     return Users;
 }

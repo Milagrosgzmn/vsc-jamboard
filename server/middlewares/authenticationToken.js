@@ -15,3 +15,5 @@ const requireAuth = (req, res, next)=>{
         return res.status(400);
     }
 }
+
+module.exports = requireAuth;
