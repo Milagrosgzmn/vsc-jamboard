@@ -13,6 +13,7 @@ const deleteContact = require('../controllers/usersControllers/deleteContact');
 const postBoard = require('../controllers/boardControllers/postBoard');
 const modifyBoard = require('../controllers/boardControllers/modifyBoard');
 const addContributor = require('../controllers/boardControllers/addContributorToBoard');
+const getAllBoards = require('../controllers/boardControllers/getAllBoards')
 
 
 //rutas
@@ -29,6 +30,9 @@ mainRouter.delete('/contact/:user_id', deleteContact);
 mainRouter.post('/contact/add', addContact)
 
 // boards
+
+mainRouter.get('/board/:user_id',getAllBoards)
+
 mainRouter.post('/board/new', postBoard)
 mainRouter.put('/board/:board_id', modifyBoard)
 mainRouter.put('/board/contributor/:user_id', addContributor)
