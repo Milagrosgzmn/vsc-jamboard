@@ -1,15 +1,21 @@
 
 import { useEffect, useState } from "react";
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-
+import { useDispatch, useSelector } from "react-redux";
+import style from './navBar.module.css';
+import { logOutUser } from "../../redux/actions/userActions";
 
 export default function NavBar(){
 
     const [open, setOpen] = useState(false);
-
+    const userLogged = useSelector(state=>{
+        return state.user.username;
+    })
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     function handleDisp (){
         const cont= document.querySelector('.content-cont');
@@ -33,8 +39,13 @@ export default function NavBar(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[open])
 
+    const handleLogOut =()=>{
+        dispatch(logOutUser())
+        navigate('/');
+    }
+
     return (
-        <header className="md:flex w-full  h-[4.5rem] fixed z-10 items-center justify-between bg-white md:px-10 px-4 ">
+    <header className="md:flex w-full  h-[4.5rem] fixed z-10 items-center justify-between darkbg md:px-10 px-4 font-bold ">
         <div></div>
         <div  onClick={()=>{
             setOpen(!open);
@@ -43,16 +54,23 @@ export default function NavBar(){
              : <div className="static  md:hidden"><MenuRoundedIcon className="text-3xl absolute right-8 top-6 cursor-pointer md:hidden"/></div>
         }
         </div>
-        <nav>
-            <ul className={`bg-white md:flex md:w-auto md:pb-0 md:items-center left-0 w-full absolute md:static
-            md-pl-0 pl-9 transition-opacity ease-out duration-500
+        <nav className="darkbg flex justify-end md:w-10/12">
+            <ul className={`bg-black md:flex w-full md:pb-0 md:items-center left-0 md:w-80 absolute md:static
+            md-pl-0 pl-9 transition-opacity ease-out duration-500 md:justify-end
 
-            ${open ? 'top-20 opacity-100' :'opacity-0 top-[-490px]'}
+            ${open ? 'top-16 opacity-100' :'opacity-0 top-[-490px]'}
             md:opacity-100`}>
-                <li>Hola, usuario, de estar registered</li>
-                <li><Link to='/sign-up'>Sign Up</Link></li>
-                <li><Link to='/log-in'>Log In</Link></li>
-                <li /*aqui onclick cierro sesion y redirect home*/>Log Out</li>
+
+                { userLogged ?
+                <>
+                    <li className={style.list}>Hola, {userLogged}</li>    
+                    <li className={style.list} onClick={handleLogOut}>Cerrar sesión</li>
+                </> :
+                <>
+                    <li className={style.list}><Link to='/log-in'>Iniciar sesión</Link></li>
+                    <li className={style.list}><Link to='/sign-up'>Registrarse</Link></li>
+                </>
+                }
                 
             </ul>
         </nav>
