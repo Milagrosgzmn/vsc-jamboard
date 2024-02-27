@@ -63,11 +63,22 @@ module.exports = (sequelize)=>{
             throw Error('Usuario o contraseña incorrectos.');   
         }
       }
+      Users.getUser = async function(user_id){
+        try {
+          const user = await this.findByPk(user_id);
+          
+          if(!user) throw new Error('Error while getting user, check data');
+          return user;
 
+        } catch (error) {
+          console.error("Error getting user:", error.message);
+            throw error;
+        }
+      }
       Users.addNewContact = async function(user_id, friend_id){
         try {
             const user = await this.findByPk(user_id);
-            await user.addFriendAsUser(friend_id);
+            await user.addContact(friend_id);
             return null; 
           } catch (error) {
             console.error("Error adding contact:", error.message);
@@ -77,11 +88,18 @@ module.exports = (sequelize)=>{
 
       Users.getContacts = async function(user_id){
         try {
-          const user = await this.findByPk(user_id);
+          const user = await this.findByPk(user_id,{
+            attributes: { exclude: ['Contacts'] }
+          });
           if(!user)throw new Error('Información incorrecta')
-          const contacts = await user.getFriendsAsUser();
+          const contactsAsUser = await user.getContact({
+            attributes: { exclude: ['password', 'Contacts'] }
+        });
+          const contactsAsFriend = await user.getContactAsFriend({
+            attributes: { exclude: ['password', 'Contacts'] }
+      });
   
-          return contacts;
+          return [...contactsAsFriend, ...contactsAsUser];
         } catch (error) {
           console.error("Error getting contacts:", error.message);
             throw error;
@@ -94,9 +112,13 @@ module.exports = (sequelize)=>{
             const contactToRemove = await this.findByPk(contact_id);
 
             if(!user && !contactToRemove) throw new Error('Información incorrecta')
-                await user.removeFriendsAsUser(contactToRemove);
-            const contacts = await user.getFriendsAsUser();
-            return contacts;
+            
+            const removed = await user.removeContact(contactToRemove);
+            if(!removed){
+              const removed2 = await user.removeContactAsFriend(contactToRemove);
+              return removed2
+            }
+            return removed;
           } catch (error) {
             console.error("Error removing contact:", error.message);
               throw error;

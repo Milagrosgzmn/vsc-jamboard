@@ -8,5 +8,7 @@ conn.sync({force:false}).then(()=>{
     const server = app.listen(PORT, ()=>{
         console.log(`Se levantó con exito el server en el puerto ${PORT}`);
     });
-    const io = setSocketServer(server)
+    setSocketServer(server)
 });
+
+

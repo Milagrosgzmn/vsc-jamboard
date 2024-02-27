@@ -3,6 +3,9 @@
 module.exports = (sequelize)=>{
     const  Contacts = sequelize.define('Contacts',{
         
+    },
+    {
+      timestamps:false,
     }
     )  
     Contacts.isAlreadyContact = async function(user_id, friend_id){

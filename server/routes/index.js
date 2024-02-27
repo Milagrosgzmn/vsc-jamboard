@@ -12,7 +12,11 @@ const requireAuth = require('../middlewares/authenticationToken');
 const deleteContact = require('../controllers/usersControllers/deleteContact');
 const postBoard = require('../controllers/boardControllers/postBoard');
 const modifyBoard = require('../controllers/boardControllers/modifyBoard');
-
+const addContributor = require('../controllers/boardControllers/addContributorToBoard');
+const getAllBoards = require('../controllers/boardControllers/getAllBoards');
+const deleteBoard = require('../controllers/boardControllers/deleteBoard');
+const deleteContributor = require('../controllers/boardControllers/deleteContributor');
+const getBoardById = require('../controllers/boardControllers/getBoardById');
 
 //rutas
 
@@ -28,10 +32,17 @@ mainRouter.delete('/contact/:user_id', deleteContact);
 mainRouter.post('/contact/add', addContact)
 
 // boards
+
+mainRouter.get('/board/:user_id',getAllBoards)
+mainRouter.get('/board/s/:board_id', getBoardById)
+
 mainRouter.post('/board/new', postBoard)
 mainRouter.put('/board/:board_id', modifyBoard)
-//mainRouter.put('/board/contributor/:user_id', addContributor)
-//mainRouter.delete('/board/:board_id', deleteBoard)
+mainRouter.put('/board/contributor/:user_id', addContributor)
+
+mainRouter.delete('/board/contributor/:id', deleteContributor);
+mainRouter.delete('/board/:id', deleteBoard)
+
 
 module.exports = mainRouter;
 

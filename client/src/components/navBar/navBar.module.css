@@ -1,5 +1,9 @@
 .list{
     margin: 0.5rem 1rem;
-    padding: 0.25rem 1rem;
     width: max-content;
+    cursor: pointer;
+}
+.list:hover{
+    color: rgb(255, 41, 41);
+    text-shadow: 2px;
 }
