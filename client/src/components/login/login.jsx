@@ -2,14 +2,14 @@ import { useState } from "react";
 import validation from '../signup/validation';
 import axios from 'axios';
 import Swal from "sweetalert2";
+import useInputChange from "../../hooks/useInputChange";
 
 import {useDispatch} from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { setMyUser } from "../../redux/actions/userActions";
 
 export default function Login() {
-    const [errors, setErrors] = useState({});
-    const [userData, setUserData]= useState({
+    const [initialState]= useState({
         email:'',
         password:'',
         username:''//agregar a validation
@@ -17,20 +17,7 @@ export default function Login() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    function handleChange(event){
-        const { name, value } = event.target;
-        const fieldErrors = validation({ [name]: value });
-    
-        setErrors(prevErrors => ({
-            ...prevErrors,
-            [name]: fieldErrors[name]
-        }));
-
-        setUserData(prevUserData => ({
-        ...prevUserData,
-        [name]: value
-        }));
-    }
+    const { userData, errors, handleChange } = useInputChange(initialState, validation);
     function submitHandler (e){
         e.preventDefault();
         if(!errors.email && !errors.password && !errors.username){
@@ -43,6 +30,9 @@ export default function Login() {
                 }).then(({data})=>{
                 if(data){
                     dispatch(setMyUser(data));
+                    const expiresIn = 3*24*60*60*1000;
+                    const expirationDate = Date.now()+expiresIn;
+                    localStorage.setItem('tokenExpires', expirationDate);
                     navigate('/home')
                 }
             }).catch(error=>{
