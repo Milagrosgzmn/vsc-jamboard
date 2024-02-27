@@ -1,14 +1,14 @@
 const {Jamboards, Users} = require('../../DB_connection');
 
 const postBoard = async (req, res)=>{
-    const {board, user_id} = req.body;
+    const {newBoard, user_id} = req.body;
 
     try {
-        if(!board || !user_id){
+        if(!newBoard || !user_id){
             return res.status(400).json({ errors: 'Missing Data' });
         }
         const user = await Users.getUser(user_id);
-        const createdBoard = await Jamboards.createBoard(board, user);
+        const createdBoard = await Jamboards.createBoard(newBoard, user);
 
         return res.status(200).json(createdBoard)
 
