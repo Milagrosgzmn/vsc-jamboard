@@ -2,61 +2,18 @@ import { useEffect, useState } from 'react'
 import Project from './projectComponent'
 import style from './styles.module.css'
 
+import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
+import ArrowDropUpRoundedIcon from '@mui/icons-material/ArrowDropUpRounded';
+import { useSelector } from 'react-redux';
+
 export default function ProjectGrid() {
 
     const [end,setEnd] = useState();
     const [seeMore, setSeeMore] = useState(false)
 
-    const myProjects = [
-        {
-            name: '1 project',
-            description:'mi proyecto de jamboard ejemplo',
-            colaborators:['Luqui', 'Marco', 'Mirko'],
-            creationDate: '25-2-24'
-        },
-        {
-            name: '2 project',
-            description:'mi proyecto de jamboard ejemplo',
-            colaborators:['Luqui', 'Marco', 'Mirko'],
-            creationDate: '25-2-24'
-        },
-        {
-            name: '3 project',
-            description:'mi proyecto de jamboard ejemplo',
-            colaborators:['Luqui', 'Marco', 'Mirko'],
-            creationDate: '25-2-24'
-        },
-        {
-            name: '4 project',
-            description:'mi proyecto de jamboard ejemplo',
-            colaborators:['Luqui', 'Marco', 'Mirko'],
-            creationDate: '25-2-24'
-        },
-        {
-            name: '1 project',
-            description:'mi proyecto de jamboard ejemplo',
-            colaborators:['Luqui', 'Marco', 'Mirko'],
-            creationDate: '25-2-24'
-        },
-        {
-            name: '2 project',
-            description:'mi proyecto de jamboard ejemplo',
-            colaborators:['Luqui', 'Marco', 'Mirko'],
-            creationDate: '25-2-24'
-        },
-        {
-            name: '3 project',
-            description:'mi proyecto de jamboard ejemplo',
-            colaborators:['Luqui', 'Marco', 'Mirko'],
-            creationDate: '25-2-24'
-        },
-        {
-            name: '4 project',
-            description:'mi proyecto de jamboard ejemplo',
-            colaborators:['Luqui', 'Marco', 'Mirko'],
-            creationDate: '25-2-24'
-        },
-    ]
+    const myProjects = useSelector(state=>{
+        return state.jamboard.boards;
+    })
 
     useEffect(()=>{
         if (myProjects.length < 5 ){
@@ -65,7 +22,7 @@ export default function ProjectGrid() {
             setEnd(6)
             setSeeMore(true)
         }
-    },[])
+    },[myProjects])
     return(
         <article className={style.projectGrid}>
             {
@@ -73,11 +30,14 @@ export default function ProjectGrid() {
                     <Project key={i} project={project}/>
                 ))
             }
-            <div className='p-4 font-semibold text-xl' onClick={()=>{setSeeMore(!seeMore)
+            {seeMore && 
+            <div className='p-4 font-semibold text-xl cursor-pointer' onClick={()=>{setSeeMore(!seeMore)
                 seeMore ? setEnd(myProjects.length) : setEnd(6)
             }}>
-                {seeMore ? 'Ver más...' : 'Ver menos'}
+                {seeMore ? <div>Ver más <ArrowDropDownRoundedIcon/></div> : <div>Ver menos <ArrowDropUpRoundedIcon/></div>}
             </div>
+            }
+            
            
         </article>
     )
