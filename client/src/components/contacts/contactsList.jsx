@@ -3,6 +3,11 @@ import Contact from "./contact"
 
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
+import profile1 from '../../assets/images/profile1.jpg'
+import profile2 from '../../assets/images/profile2.jpg'
+import profile3 from '../../assets/images/profile3.jpg'
+import profile4 from '../../assets/images/profile4.jpg'
+
 import { useSelector } from "react-redux";
 
 export default function ContactsList() {
@@ -10,6 +15,8 @@ export default function ContactsList() {
     const contacts = useSelector(state=>{
         return state.user.contacts;
     })
+     
+    const profilePics = [profile1,profile2,profile3,profile4];
 
     const [visibleContacts, setVisibleContacts] = useState(4)
     const [start, setStart] = useState(0);
@@ -54,10 +61,13 @@ export default function ContactsList() {
     }
 
     return(
-        <section className="w-10/12 flex flex-col my-8">
+        <section className="w-10/12 flex flex-col my-16">
             <div className="flex flex-row justify-between items-center">
                 <h2>Mi red</h2>
-                <input className="rounded-2xl px-4 py-1 border-2 border-inheret" type="search" placeholder="Buscar contacto"/>
+                <div className="flex">
+                    <button className="bg-green-500 font-semibold mx-2 py-2 px-4 rounded-xl"> Nuevo contacto +</button>
+                    <input className="rounded-2xl px-4 py-1 border-2 border-inheret" type="search" placeholder="Buscar contacto"/>
+                </div>
             </div>
 
             <div className="relative flex items-center">
@@ -71,7 +81,7 @@ export default function ContactsList() {
                     <article className="w-full h-40 flex items-center">
                         
                         {contacts.slice(start, end).map((contact, i) =>(
-                            <Contact key={i} contact={contact} />
+                            <Contact key={i} i={i} pics={profilePics} contact={contact} />
                         ))}
                     </article>
                 </div>
