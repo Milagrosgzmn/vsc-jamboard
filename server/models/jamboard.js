@@ -21,17 +21,17 @@ module.exports = (sequelize)=>{
             defaultValue:[]
         },
         html:{
-            type:DataTypes.STRING,
+            type:DataTypes.TEXT,
             defaultValue:'',
             allowNull: true,
         },
         css:{
-            type:DataTypes.STRING,
+            type:DataTypes.TEXT,
             defaultValue:'',
             allowNull: true,
         },
         js:{
-            type:DataTypes.STRING,
+            type:DataTypes.TEXT,
             defaultValue:'',
             allowNull: true,
         },
@@ -101,7 +101,7 @@ module.exports = (sequelize)=>{
 
             await board.addUsers(user, { through: { role: 'contributor' } });
             
-            await this.update({contributors:[...board.contributors, user.id]},{
+            await this.update({contributors:[...board.contributors, user.username]},{
                 where:{
                     id:board_id,
                 }})
@@ -138,7 +138,9 @@ module.exports = (sequelize)=>{
                 throw new Error('Error while getting board, check data');
             }
             if(boards[0].UserBoard.role === 'owner'){
-                await this.update({deleted:true},{
+                console.log('in fact is owner');
+                const changes = {deleted:true}
+                await this.update(changes,{
                     where:{
                         id:board_id,
                     }});
