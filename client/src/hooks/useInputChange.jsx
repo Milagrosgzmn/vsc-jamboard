@@ -19,7 +19,7 @@ function useInputChange(initialState, validation) {
     }));
   }
 
-  return { userData, errors, handleChange };
+  return { userData, errors, handleChange, setUserData };
 }
 
 export default useInputChange;
