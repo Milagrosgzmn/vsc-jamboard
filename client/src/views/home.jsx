@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { logOutUser, setMyContacts } from "../redux/actions/userActions";
 import ContactsList from "../components/contacts/contactsList";
 import ProjectGrid from "../components/projects/projectGrid";
-import { setMyBoards } from "../redux/actions/jamboardActions";
+import { boardsReset, filterBoards, setMyBoards } from "../redux/actions/jamboardActions";
 import ProjectForm from "../components/projectForm/projectForm";
 import ContactForm from "../components/contacts/contactForm";
 
 export default function Home() {
-
+  const [isSearching, setSearching] = useState(false)
     const [openContactMenu, setContactMenu] = useState(false)
     const [openProjectForm, setOpenProjectForm] = useState(false);
     const dispatch = useDispatch();
@@ -42,6 +42,19 @@ export default function Home() {
       }
       
     },[])
+
+    function handleChangeProjects(e){
+      if (e.target.value) {
+          setSearching(true)
+          const value = e.target.value.toLowerCase();
+      dispatch(filterBoards(value))
+      }else{
+          setSearching(false)
+          dispatch(boardsReset())
+      }
+      
+   }
+
     return (
       < main className={openProjectForm ? 'flex flex-col pt-16 items-center relative' : 'flex flex-col pt-16 items-center' }>
         <ContactsList/>
@@ -52,7 +65,12 @@ export default function Home() {
             <div className="flex md:text-base text-xs mt-4 sm:mt-1">
               <button onClick={()=>{setOpenProjectForm(true)}} className="sm:block hidden bg-green-500 font-semibold mx-2 py-2 px-4 rounded-xl"> Nuevo proyecto +</button>
               <button onClick={()=>{setOpenProjectForm(true)}} className="sm:hidden bg-green-500 font-semibold mx-2 py-2 px-4 rounded-xl"> +</button>
-              <input className=" rounded-2xl px-4 py-1 border-2 border-inheret" type="search" placeholder="Buscar proyecto"/>
+              <input className=" rounded-2xl px-4 py-1 border-2 border-inheret" 
+                onChange={handleChangeProjects}
+                type="search" placeholder="Buscar proyecto"/>
+              {isSearching && <button className="bg-neutral-800 rounded-2xl px-4 py-1 text-white font-semibold " onClick={()=>{
+                        dispatch(boardsReset())
+                    }}>Reset</button>}
             </div>
           </div>
           
