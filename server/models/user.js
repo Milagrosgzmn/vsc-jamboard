@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const {DataTypes} = require('sequelize');
+const {DataTypes, Op} = require('sequelize');
 
 module.exports = (sequelize)=>{
     const Users = sequelize.define('Users',{
@@ -103,6 +103,23 @@ module.exports = (sequelize)=>{
         } catch (error) {
           console.error("Error getting contacts:", error.message);
             throw error;
+        }
+      }
+      Users.getContactsByName = async function(username){
+        try {
+          const contacts = await this.findAll({
+            where: {
+                username: {
+                    [Op.iLike]: `%${username}%`,
+                },
+            },
+            attributes: { exclude: ['password'] }
+            
+        });
+        return contacts;
+        } catch (error) {
+          console.error("Error while searching:", error.message);
+          throw error;
         }
       }
 

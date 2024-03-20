@@ -10,9 +10,9 @@ const addContributor = async (req, res)=>{
         }
         const user = await Users.getUser(user_id);
 
-        await Jamboards.addUserToBoard(board_id, user)
+        const succeded = await Jamboards.addUserToBoard(board_id, user)
 
-        return res.status(200).json({success: true})
+        return res.status(200).json({success: succeded})
         
     } catch (error) {
         console.error(error.message);

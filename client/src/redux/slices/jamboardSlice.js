@@ -8,9 +8,17 @@ export const jamboardSlice = createSlice({
     reducers:{
         setBoards : (state, action)=>{
             state.boards= action.payload;
+        },
+        addBoard: (state, action)=>{
+            state.boards= [...state.boards, action.payload];
+        },
+        removeBoard:(state,action)=>{
+            const newBoards = state.boards.slice().filter(({id})=> id!== action.payload);
+            state.boards = newBoards;
         }
+
     }
 });
 
-export const {setBoards} = jamboardSlice.actions;
+export const {setBoards, addBoard, removeBoard} = jamboardSlice.actions;
 export default jamboardSlice.reducer;

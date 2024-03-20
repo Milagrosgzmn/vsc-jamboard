@@ -8,8 +8,8 @@ const deleteContact = async (req,res)=>{
             return res.status(400).json({ errors: 'Missing Data' });
         }
 
-        const contacts = await Users.deleteContact(user_id, contact_id);
-        return res.status(200).json(contacts);
+        const deleted = await Users.deleteContact(user_id, contact_id);
+        return res.status(200).json({success:deleted});
 
     } catch (error) {
         console.error(error.message);
