@@ -1,4 +1,4 @@
-import { setBoards, addBoard, removeBoard } from "../slices/jamboardSlice";
+import { setBoards, addBoard, removeBoard, filterMyBoards, resetBoards} from "../slices/jamboardSlice";
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -34,3 +34,15 @@ export const deleteBoard = (board_id)=>{
     dispatch(removeBoard(board_id));
   }
 }
+
+export const filterBoards = (data)=>{
+  return (dispatch)=>{
+      dispatch(filterMyBoards(data));
+  }
+};
+
+export const boardsReset = ()=>{
+  return (dispatch)=>{
+      dispatch(resetBoards());
+  }
+};
