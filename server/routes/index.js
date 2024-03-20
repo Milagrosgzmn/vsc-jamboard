@@ -31,21 +31,21 @@ mainRouter.get('/logOut', logOut);
 // relacionado a contactos
 mainRouter.post('/contact/check', requireAuth, sendInvitation); // o deberia ser un get?
 mainRouter.get('/contact/:user_id',requireAuth, getAllContacts);
-mainRouter.delete('/contact/:user_id', deleteContact);
-mainRouter.post('/contact/add', addContact)
-mainRouter.get('/contact', getContactByUserName);
+mainRouter.delete('/contact/:user_id', requireAuth, deleteContact);
+mainRouter.post('/contact/add', requireAuth, addContact)
+mainRouter.get('/contact', requireAuth, getContactByUserName);
 
 // boards
 
-mainRouter.get('/board/:user_id',getAllBoards)
-mainRouter.get('/board/s/:board_id', getBoardById)
+mainRouter.get('/board/:user_id',requireAuth, getAllBoards)
+mainRouter.get('/board/s/:board_id',requireAuth, getBoardById)
 
-mainRouter.post('/board/new', postBoard)
-mainRouter.put('/board/:board_id', modifyBoard)
-mainRouter.put('/board/contributor/:user_id', addContributor)
+mainRouter.post('/board/new',requireAuth, postBoard)
+mainRouter.put('/board/:board_id',requireAuth, modifyBoard)
+mainRouter.put('/board/contributor/:user_id',requireAuth, addContributor)
 
-mainRouter.delete('/board/contributor/:id', deleteContributor);
-mainRouter.delete('/board/:id', deleteBoard)
+mainRouter.delete('/board/contributor/:id', requireAuth,deleteContributor);
+mainRouter.delete('/board/:id', requireAuth,deleteBoard)
 
 
 module.exports = mainRouter;
