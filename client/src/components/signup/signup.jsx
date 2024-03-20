@@ -2,10 +2,12 @@ import { useState } from "react";
 import validation from './validation';
 import axios from 'axios';
 import Swal from "sweetalert2";
-
+import { setMyUser } from "../../redux/actions/userActions";
 import {useNavigate} from 'react-router-dom'
+import { useDispatch } from "react-redux";
 
 export default function SignUp() {
+
     const [errors, setErrors] = useState({});
     const [userData, setUserData]= useState({
         email:'',
@@ -13,6 +15,7 @@ export default function SignUp() {
         username:''//agregar a validation
     });
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     function handleChange(event){
@@ -40,12 +43,15 @@ export default function SignUp() {
                         'Content-Type': 'application/json',}
                 }).then(({data})=>{
                 if(data){
-                    console.log(data)
                     Swal.fire(
                         '¡Excelente!',
                         '¡Te registraste con exito!',
                         'success'
                     )
+                    dispatch(setMyUser(data));
+                    const expiresIn = 3*24*60*60*1000;
+                    const expirationDate = Date.now()+expiresIn;
+                    localStorage.setItem('tokenExpires', expirationDate);
                     navigate('/home')
                 }
             }).catch(error=>{
