@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react'
 import Project from './projectComponent'
 import style from './styles.module.css'
@@ -6,7 +7,7 @@ import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import ArrowDropUpRoundedIcon from '@mui/icons-material/ArrowDropUpRounded';
 import { useSelector } from 'react-redux';
 
-export default function ProjectGrid() {
+export default function ProjectGrid({setOpen, setContactMenu}) {
 
     const [end,setEnd] = useState();
     const [seeMore, setSeeMore] = useState(false)
@@ -20,14 +21,18 @@ export default function ProjectGrid() {
             setEnd(myProjects.length)
         }else{
             setEnd(6)
-            setSeeMore(true)
+            if(myProjects.length>6){
+                setSeeMore(true)
+            }
         }
     },[myProjects])
     return(
+        <article className="lg:block flex justify-center min-h-80 mt-4">
+        {myProjects.length?
         <article className={style.projectGrid}>
             {
                 myProjects.slice(0,end).map((project, i) =>(
-                    <Project key={i} project={project}/>
+                    <Project key={i} project={project} setOpen={setOpen} setContactMenu={setContactMenu}/>
                 ))
             }
             {seeMore && 
@@ -38,7 +43,11 @@ export default function ProjectGrid() {
             </div>
             }
             
+            
            
+        </article>
+        : <p className=' text-center font-medium text-xl py-4 my-4'>Aun no tienes proyectos.</p>
+        }
         </article>
     )
 }
