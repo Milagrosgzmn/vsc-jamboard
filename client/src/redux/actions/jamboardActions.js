@@ -1,4 +1,4 @@
-import { setBoards } from "../slices/jamboardSlice";
+import { setBoards, addBoard, removeBoard } from "../slices/jamboardSlice";
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -21,4 +21,16 @@ export const setMyBoards = (user_id)=>{
           })
         }
     }
+}
+
+export const addNewBoard = (board)=>{
+    return (dispatch)=>{
+      dispatch(addBoard(board));
+    }
+}
+
+export const deleteBoard = (board_id)=>{
+  return (dispatch)=>{
+    dispatch(removeBoard(board_id));
+  }
 }
