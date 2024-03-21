@@ -93,10 +93,10 @@ module.exports = (sequelize)=>{
           });
           if(!user)throw new Error('Información incorrecta')
           const contactsAsUser = await user.getContact({
-            attributes: { exclude: ['password', 'Contacts'] }
+            attributes: ['id', 'username']
         });
           const contactsAsFriend = await user.getContactAsFriend({
-            attributes: { exclude: ['password', 'Contacts'] }
+            attributes: ['id', 'username'],
       });
   
           return [...contactsAsFriend, ...contactsAsUser];
@@ -105,18 +105,29 @@ module.exports = (sequelize)=>{
             throw error;
         }
       }
-      Users.getContactsByName = async function(username){
+      Users.getContactsByName = async function(username, me){
         try {
           const contacts = await this.findAll({
             where: {
                 username: {
                     [Op.iLike]: `%${username}%`,
                 },
+                id:{
+                  [Op.not]: me,
+                }
             },
-            attributes: { exclude: ['password'] }
+            attributes: { exclude: ['password', 'email'] }
             
         });
-        return contacts;
+        const alreadyExists = await this.getContacts(me);
+
+        const filteredList = contacts.filter(contact =>{
+          return !alreadyExists.some(existingContact =>{
+            return existingContact.id === contact.id && contact.username === existingContact.username;
+          })
+        })
+       
+        return filteredList;
         } catch (error) {
           console.error("Error while searching:", error.message);
           throw error;
