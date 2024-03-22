@@ -9,7 +9,8 @@ import ProjectForm from "../components/projectForm/projectForm";
 import ContactForm from "../components/contacts/contactForm";
 
 export default function Home() {
-  const [isSearching, setSearching] = useState(false)
+    const [isSearching, setSearching] = useState(false)
+    const [searchValue, setSearchValue] = useState('')
     const [openContactMenu, setContactMenu] = useState(false)
     const [openProjectForm, setOpenProjectForm] = useState(false);
     const dispatch = useDispatch();
@@ -44,6 +45,7 @@ export default function Home() {
     },[])
 
     function handleChangeProjects(e){
+      setSearchValue(e.target.value)
       if (e.target.value) {
           setSearching(true)
           const value = e.target.value.toLowerCase();
@@ -67,9 +69,11 @@ export default function Home() {
               <button onClick={()=>{setOpenProjectForm(true)}} className="sm:hidden bg-green-500 font-semibold mx-2 py-2 px-4 rounded-xl"> +</button>
               <input className=" rounded-2xl px-4 py-1 border-2 border-inheret" 
                 onChange={handleChangeProjects}
+                value={searchValue}
                 type="search" placeholder="Buscar proyecto"/>
               {isSearching && <button className="bg-neutral-800 rounded-2xl px-4 py-1 text-white font-semibold " onClick={()=>{
                         dispatch(boardsReset())
+                        setSearchValue('')
                     }}>Reset</button>}
             </div>
           </div>
