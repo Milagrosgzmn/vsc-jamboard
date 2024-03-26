@@ -1,8 +1,5 @@
 import axios from 'axios';
-
-import { useEffect, useState } from "react";
 import Contact from "./contact"
-
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
 import profile1 from '../../assets/images/profile1.jpg'
@@ -11,23 +8,24 @@ import profile3 from '../../assets/images/profile3.jpg'
 import profile4 from '../../assets/images/profile4.jpg'
 import AddContact from "./addContact";
 
+import {useOnKeyPress} from '../../hooks/useOnKeyPress';
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { contactsReset, filterContacts} from '../../redux/actions/userActions';
 
 export default function ContactsList() {
-
     const dispatch = useDispatch();
-    const {contacts} = useSelector(state=>{
+    const {contacts,id} = useSelector(state=>{
         return state.user;
     })
-    useEffect(()=>{
-
-    },[contacts])
+    useEffect(()=>{},[contacts])
      
     const profilePics = [profile1,profile2,profile3,profile4];
-    
+    const [isAdding, setAdding] = useState(false);
+    const [didActivate, setActivate] = useState(false);
     const [isSearching, setSearching] = useState(false);
     const [searchValue, setSearchValue] = useState('');
+    const [searchValueContact, setSearchValueContact] = useState('');
     const [addContact, setAddContact] = useState(false)
     const [contactList, setContactList] = useState([]);
     const [buttonCont] = useState({
@@ -76,57 +74,83 @@ export default function ContactsList() {
         setEnd((prevEnd) => Math.max(prevEnd - visibleContacts, visibleContacts));
     }
     function handleChangeAlreadyContact(e){
+        setSearchValueContact(e.target.value)
+
         if (e.target.value) {
             setSearching(true)
             const value = e.target.value.toLowerCase();
-        dispatch(filterContacts(value))
+            dispatch(filterContacts(value))
         }else{
             setSearching(false)
             dispatch(contactsReset())
         }
         
      }
-    const handleSearchContact = async(e)=>{
-       try {
+    const handleChange = (e)=>{
         setSearchValue(e.target.value);
-        let searchV = searchValue.trim();
-
-        const {data} = await axios(`/contact?username=${searchV}`);
-            setContactList(data)
-            console.log(data);
-       } catch (error) {
-        console.error(error);
-       }
-
-
+        if(!e.target.value){
+           setContactList([]);
+           setAdding(false);
+           setActivate(false);
+        }else{
+            setAdding(true);
+        }
+        
     }
+    const handleSearchContact = async()=>{
+        setActivate(true);
+        try {
+            let searchV = searchValue.trim();
+            const {data} = await axios(`/contact?username=${searchV}&me=${id}`, {
+                withCredentials: true,
+              });
+                setContactList(data)
+           } catch (error) {
+            console.error(error);
+           }
+    }
+    useOnKeyPress(handleSearchContact, 'Enter', isAdding);
 
     return(
         <section className="w-10/12 flex flex-col my-16">
             <div className="flex sm:flex-row flex-col  justify-between items-center">
                 <h2 className="font-bold sm:text-3xl text-xl sm:w-auto w-full">Mi red</h2>
                 <div className="flex md:text-base text-xs mt-4 sm:mt-1">
+                    <div className='relative'> 
                     {addContact && 
-                    <input value={searchValue} onChange={handleSearchContact} className="rounded-2xl px-4 py-1 border-2 border-inheret" type="search" placeholder="Ingresa el nombre de usuario"/>
+                    <input value={searchValue} onChange={handleChange} className="rounded-2xl px-4 py-1 border-2 border-inheret" type="search" placeholder="Ingresa el nombre de usuario"/>
                     }
-                    <div className="h-max">
-                        { contactList.length ? <AddContact/> : ''}
+                    {didActivate && <div className="h-max w-full  absolute bg-neutral-200 z-10 p-4 rounded-xl transition-all duration-800 ease-in-out ">
+                        { didActivate && (contactList.length ? contactList.map( contact =>(
+                            <AddContact key ={contact.id.slice(0,6)} contact={contact}/>
+                        )) : <p>No se ha encontrado al usuario</p>)}
+                    </div>}
                     </div>
                     <button onClick={()=>{
+                        if(addContact){
+                            setActivate(false);
+                            setAdding(false);
+                            setSearchValue('')
+                        }
                         setAddContact(!addContact)
                     }}className="sm:block hidden bg-green-500 font-semibold mx-2 py-2 px-4 rounded-xl">{addContact ? 'x' : buttonCont.normal}</button>
                     <button onClick={()=>{
+                        if(addContact){
+                            setActivate(false);
+                            setAdding(false);
+                            setSearchValue('')
+                        }
                         setAddContact(!addContact)
                     }}
                     className="sm:hidden bg-green-500 font-semibold mx-2 py-2 px-4 rounded-xl">{addContact ? 'x' : buttonCont.small}</button>
                     
-                    <input className="rounded-2xl px-4 py-1 border-2 border-inheret mx-1" type="search" placeholder="Buscar contacto" onChange={handleChangeAlreadyContact}/>
+                    <input className="rounded-2xl px-4 py-1 border-2 border-inheret mx-1" type="search" placeholder="Buscar contacto" onChange={handleChangeAlreadyContact} value={searchValueContact}/>
                    {isSearching && <button className="bg-neutral-800 rounded-2xl px-4 py-1 text-white font-semibold " onClick={()=>{
                         dispatch(contactsReset())
+                        setSearchValueContact('')
                     }}>Reset</button>}
                 </div>
             </div>
-
             <div className="relative flex items-center mt-4">
                 <div className="absolute left-0 rounded-full bg-black/20 cursor-pointer" onClick={handlePrev}>
                     <ArrowLeftRoundedIcon/>
@@ -136,16 +160,12 @@ export default function ContactsList() {
                 </div> 
                 <div className=" mx-auto w-11/12">
                     <article className="w-full h-40 flex items-center justify-center">
-                        
                         {contacts.slice(start, end).map((contact, i) =>(
                             <Contact key={i} i={i} pics={profilePics} contact={contact} />
                         ))}
                     </article>
                 </div>
             </div>
-            
-
-            
         </section>
     )
 }
