@@ -46,7 +46,7 @@ export default function ProjectGrid({setOpen, setContactMenu}) {
             
            
         </article>
-        : <p className=' text-center font-medium text-xl py-4 my-4'>Aun no tienes proyectos.</p>
+        : <p className=' text-center font-medium text-xl py-4 my-4'>No hay proyectos para mostrar.</p>
         }
         </article>
     )

@@ -1,4 +1,4 @@
-import { setUser, resetUser, deleteContact, setContacts } from "../slices/userSlice";
+import { setUser, resetUser, deleteContact, setContacts, filterMyContacts, resetContacts } from "../slices/userSlice";
 import axios from 'axios';
 import Swal from 'sweetalert2'
 
@@ -72,3 +72,14 @@ export const setMyContacts = (user_id)=>{
         }
     }
 }
+
+export const filterContacts = (data)=>{
+  return (dispatch)=>{
+      dispatch(filterMyContacts(data));
+  }
+};
+export const contactsReset = ()=>{
+  return (dispatch)=>{
+      dispatch(resetContacts());
+  }
+};
