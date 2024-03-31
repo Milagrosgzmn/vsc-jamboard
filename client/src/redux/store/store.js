@@ -12,13 +12,19 @@ const userPersistConfig = {
     storage,
     whitelist:['id', 'username','email']
   };
-  
   const persistedUserReducer = persistReducer(userPersistConfig, user);
+
+  const boardPersistConfig = {
+    key: 'jamboard',
+    storage,
+    whitelist:['boards']
+  };
+  const persistedBoardsReducer = persistReducer(boardPersistConfig, jamboard);
 
 export const store = configureStore({
     reducer:{
         user: persistedUserReducer,
-        jamboard: jamboard
+        jamboard: persistedBoardsReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

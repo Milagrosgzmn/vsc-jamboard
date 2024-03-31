@@ -16,7 +16,7 @@ export const jamboardSlice = createSlice({
             state.boardsBackUp= [...state.boardsBackUp, action.payload];
         },
         removeBoard:(state,action)=>{
-            const newBoards = state.boards.slice().filter(({id})=> id!== action.payload);
+            const newBoards = state.boards.slice().filter((board)=> board.id !== action.payload);
             state.boards = newBoards;
             state.boardsBackUp = newBoards;
         },
