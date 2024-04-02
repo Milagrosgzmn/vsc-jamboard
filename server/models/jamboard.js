@@ -7,6 +7,10 @@ module.exports = (sequelize)=>{
             defaultValue: DataTypes.UUIDV4,
             primaryKey:true,
         },
+        enterCode:{
+            type: DataTypes.STRING,
+            allowNull:false,
+        },
         name:{
             type:DataTypes.STRING,
             allowNull: false,
@@ -43,6 +47,16 @@ module.exports = (sequelize)=>{
 
     Jamboards.createBoard = async function (board, user) {
         try {
+            const generateCode = ()=>{
+                const chars = "abcdefghijklmnopqrstuvwxyz1234567890";
+                let code='';
+                for (let i = 0; i < 10; i++) {
+                    code += chars.charAt(Math.floor(Math.random()*chars.length));
+                }
+                return code.toUpperCase();
+            }
+            board.enterCode = generateCode();
+            
             const createdBoard = await this.create(board)
 
             await createdBoard.addUsers(user, { through: { role: 'owner' } }); 
@@ -59,6 +73,24 @@ module.exports = (sequelize)=>{
             const board = await this.findByPk(board_id,{
                 where:{
                     deleted:false,
+                }
+            });
+            
+            if(!board) throw new Error('Error while getting board, check data');
+            return board;
+  
+          } catch (error) {
+            console.error("Error getting board:", error.message);
+              throw error;
+          }
+    }
+    Jamboards.getBoardByCode = async function(enterCode){
+        
+        try {
+            const board = await this.findOne({
+                where:{
+                    deleted:false,
+                    enterCode: enterCode,
                 }
             });
             
@@ -138,7 +170,6 @@ module.exports = (sequelize)=>{
                 throw new Error('Error while getting board, check data');
             }
             if(boards[0].UserBoard.role === 'owner'){
-                console.log('in fact is owner');
                 const changes = {deleted:true}
                 await this.update(changes,{
                     where:{
@@ -147,7 +178,7 @@ module.exports = (sequelize)=>{
                 return;
             }
             await this.deleteUserFromBoard(boards[0],user);
-            return
+            return true;
             
         } catch (error) {
             console.error("Error while deleting:", error.message);
