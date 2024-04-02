@@ -122,7 +122,11 @@ export default function ContactsList() {
                     }
                     {didActivate && <div className="h-max w-full  absolute bg-neutral-200 z-10 p-4 rounded-xl transition-all duration-800 ease-in-out ">
                         { didActivate && (contactList.length ? contactList.map( contact =>(
-                            <AddContact key ={contact.id.slice(0,6)} contact={contact}/>
+                            <AddContact key ={contact.id.slice(0,6)} 
+                            setSearchValue={setSearchValue}
+                            contact={contact} 
+                            setAddContact={setAddContact} 
+                            setActivate={setActivate}/>
                         )) : <p>No se ha encontrado al usuario</p>)}
                     </div>}
                     </div>
