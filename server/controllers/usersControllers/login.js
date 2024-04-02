@@ -9,7 +9,7 @@ const login = async (req, res)=>{
         if(!email || !password)throw Error('Missing data');
 
         const user = await Users.login(email, password);
-        const token = createToken(user.id)
+        const token = createToken(user.id, 'user');
 
         res.cookie('jwt',token,{httpOnly: true,maxAge:timeExp})
         return res.status(200).json(user)

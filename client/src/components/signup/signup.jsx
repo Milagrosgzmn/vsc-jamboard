@@ -52,6 +52,7 @@ export default function SignUp() {
                     const expiresIn = 3*24*60*60*1000;
                     const expirationDate = Date.now()+expiresIn;
                     localStorage.setItem('tokenExpires', expirationDate);
+                    localStorage.removeItem('role');
                     navigate('/home')
                 }
             }).catch(error=>{

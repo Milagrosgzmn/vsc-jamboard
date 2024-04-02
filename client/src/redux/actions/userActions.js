@@ -39,6 +39,10 @@ export const removeContact = (user_id,contact_id)=>{
                 withCredentials: true,
               });
             if(data.success){
+                Swal.fire({
+                  title: "¡Contacto eliminado!",
+                  icon: "success"
+                });
                 dispatch(deleteContact(contact_id))
             }
         } catch (error) {

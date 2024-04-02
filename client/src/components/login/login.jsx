@@ -33,6 +33,7 @@ export default function Login() {
                     const expiresIn = 3*24*60*60*1000;
                     const expirationDate = Date.now()+expiresIn;
                     localStorage.setItem('tokenExpires', expirationDate);
+                    localStorage.removeItem('role');
                     navigate('/home')
                 }
             }).catch(error=>{

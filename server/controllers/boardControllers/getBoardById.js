@@ -9,6 +9,7 @@ const getBoardById = async (req, res)=>{
         res.status(200).json(board);
     } catch (error) {
         console.error(error);
+        return res.status(400).json({errors: error.message});
     }
 }
 module.exports = getBoardById;

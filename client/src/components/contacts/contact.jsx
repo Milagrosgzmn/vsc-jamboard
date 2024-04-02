@@ -35,7 +35,7 @@ export default function Contact({contact, pics, i}) {
                     setOpenMenu(!openMenu)
                  }}
                  className='text-black/[0.7] cursor-pointer'/>
-                {openMenu && <ContactOptionsMenu/>}
+                {openMenu && <ContactOptionsMenu contact={contact}/>}
             </div>
         </article>
     )
