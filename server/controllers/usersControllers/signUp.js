@@ -8,7 +8,7 @@ const signUp = async (req, res)=>{
         if (!user.email || !user.password || !user.username)throw Error ('Verifica todos los campos');
 
         const createdUser = await Users.signUp(user.email, user.password, user.username);
-        const token = createToken(createdUser.id);
+        const token = createToken(createdUser.id, 'user');
 
         res.cookie('jwt',token,{httpOnly: true,maxAge:timeExp*1000})
         
