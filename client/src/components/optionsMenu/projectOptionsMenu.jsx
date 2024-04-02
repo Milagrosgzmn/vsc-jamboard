@@ -17,7 +17,7 @@ export default function ProjectOptionsMenu(props) {
     }
 
     const handleDelete = ()=>{
-        const role = localStorage.getItem('role');
+        const role = project.UserBoard.role;
         try {
             Swal.fire({
                 title: "¿Estás seguro?",
@@ -28,16 +28,21 @@ export default function ProjectOptionsMenu(props) {
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Sí, eliminar"
               }).then(async (result) => {
-                if (result.isConfirmed) {
-                    const url = role === 'owner' ? '/board' : '/board/contributor';
-                    await axios.delete(`${url}/${project.id}_${id}`)
-                    dispatch(deleteBoard(project.id));
-                    Swal.fire({
-                        title: "¡Eliminado!",
-                        text: "El proyecto ha sido borrado de tu tablero",
-                        icon: "success"
-                    });
+                if (result.isDenied) {//swall
                 }
+                const url = role === 'owner' ? '/board' : '/board/contributor';
+                await axios.delete(`${url}/${project.id}_${id}`,{
+                    withCredentials: true,
+                  })
+                dispatch(deleteBoard(project.id));
+                Swal.fire({
+                    title: "¡Eliminado!",
+                    text: "El proyecto ha sido borrado de tu tablero",
+                    icon: "success"
+                    });
+                
+              }).catch((e)=>{
+                console.error(e);
               });
         } catch (error) {
             console.error(error);
