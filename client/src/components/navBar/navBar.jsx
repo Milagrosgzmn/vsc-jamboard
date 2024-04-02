@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import {Link, useNavigate} from 'react-router-dom';
 
+import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useDispatch, useSelector } from "react-redux";
@@ -45,7 +46,7 @@ export default function NavBar(){
     }
 
     return (
-    <header className="md:flex w-full  h-[4.5rem] fixed z-10 items-center justify-between darkbg md:px-10 px-4 font-bold ">
+    <header className="box-border w-full md:flex h-[4.5rem] fixed z-10 items-center justify-between darkbg font-bold ">
         <div></div>
         <div  onClick={()=>{
             setOpen(!open);
@@ -58,13 +59,15 @@ export default function NavBar(){
             <ul className={`bg-black md:flex w-full md:pb-0 md:items-center left-0 md:w-80 absolute md:static
             md-pl-0 pl-9 transition-opacity ease-out duration-500 md:justify-end
 
-            ${open ? 'top-16 opacity-100' :'opacity-0 top-[-490px]'}
+            ${open ? 'top-16 opacity-100 pb-4' :'opacity-0 top-[-490px]'}
             md:opacity-100`}>
 
                 { userLogged ?
                 <>
+                    <li className="cursor-pointer hidden md:block"><NotificationsNoneRoundedIcon/></li>
                     <li className={style.list}>Hola, {userLogged}</li>    
                     <li className={style.list} onClick={handleLogOut}>Cerrar sesión</li>
+                    <li className="md:hidden block my-2 mx-4">Notificaciones</li>
                 </> :
                 <>
                     <li className={style.list}><Link to='/log-in'>Iniciar sesión</Link></li>
