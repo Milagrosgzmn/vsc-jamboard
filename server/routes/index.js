@@ -6,6 +6,7 @@ const requireAuth = require('../middlewares/authenticationToken');
 const login = require('../controllers/usersControllers/login');
 const signUp = require('../controllers/usersControllers/signUp');
 const logOut = require('../controllers/usersControllers/logOut');
+const loginAsAnonymousUser = require('../controllers/usersControllers/loginAsAnonymousUser');
 
 const sendInvitation = require('../controllers/usersControllers/sendInvitation');
 const getAllContacts = require('../controllers/usersControllers/getAllContacts');
@@ -20,6 +21,7 @@ const modifyBoard = require('../controllers/boardControllers/modifyBoard');
 const addContributor = require('../controllers/boardControllers/addContributorToBoard');
 const deleteBoard = require('../controllers/boardControllers/deleteBoard');
 const deleteContributor = require('../controllers/boardControllers/deleteContributor');
+const getBoardByCode = require('../controllers/boardControllers/getCodeByCode');
 
 //rutas
 
@@ -27,6 +29,7 @@ const deleteContributor = require('../controllers/boardControllers/deleteContrib
 mainRouter.post('/login', login);
 mainRouter.post('/signUp', signUp);
 mainRouter.get('/logOut', logOut);
+mainRouter.get('/', loginAsAnonymousUser)
 
 // relacionado a contactos
 mainRouter.post('/contact/check', requireAuth, sendInvitation); // o deberia ser un get?
@@ -39,9 +42,10 @@ mainRouter.get('/contact', requireAuth, getContactByUserName);
 
 mainRouter.get('/board/:user_id',requireAuth, getAllBoards)
 mainRouter.get('/board/s/:board_id',requireAuth, getBoardById)
+mainRouter.get('/board/:enter_code',requireAuth, getBoardByCode)
 
 mainRouter.post('/board/new',requireAuth, postBoard)
-mainRouter.put('/board/:board_id',requireAuth, modifyBoard)
+mainRouter.put('/board/:board_id', modifyBoard)
 mainRouter.put('/board/contributor/:user_id',requireAuth, addContributor)
 
 mainRouter.delete('/board/contributor/:id', requireAuth,deleteContributor);
