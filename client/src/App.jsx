@@ -70,7 +70,7 @@ function App() {
     
   return (
     <>
-    {!isProjectRoute && (location.pathname===('/home' || '/')) && <NavBar/>}
+    {!isProjectRoute && (( location.pathname === '/home') ||  (location.pathname === '/')) && <NavBar/>}
     <Routes>
       <Route path='/' element={<Landing/>}/>
       <Route path='/log-in' element={<Login/>}/>
