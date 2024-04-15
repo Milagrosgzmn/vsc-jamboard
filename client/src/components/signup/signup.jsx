@@ -69,8 +69,14 @@ export default function SignUp() {
     }
 
     return (
-        <section className="flex flex-col w-full justify-center items-center">
-        <h2 className="text-3xl text-center py-4">Regístrese</h2>
+        <section className="flex flex-col w-full h-screen bg-black justify-center items-center">
+            <div className="w-full grid justify-items-start pl-8">
+                <button onClick={()=>{
+                    navigate('/')
+                }}
+                className="rounded-xl text-Sl text-black bg-white/[.6] py-2 px-4 font-semibold mt-2 hover:bg-red-500 mr-10">X</button>
+            </div>
+            <h2 className="text-3xl text-white font-bold  text-center py-4">Regístrese</h2>
             <form id="signup" onSubmit={submitHandler}
             className="flex flex-col w-96 bg-gray-800 bg-opacity-90 p-6 m-4 rounded-xl">
                 <div className="field flex flex-col mt-2">
