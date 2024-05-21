@@ -8,10 +8,12 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useDispatch, useSelector } from "react-redux";
 import style from './navBar.module.css';
 import { logOutUser } from "../../redux/actions/userActions";
+import NotificationsContainer from "../notifications/notificationsContainer";
 
 export default function NavBar(){
 
     const [open, setOpen] = useState(false);
+    const [notifOpen, setNotifOpen] = useState(false);
     const userLogged = useSelector(state=>{
         return state.user.username;
     })
@@ -64,7 +66,12 @@ export default function NavBar(){
 
                 { userLogged ?
                 <>
-                    <li className="cursor-pointer hidden md:block"><NotificationsNoneRoundedIcon/></li>
+                    <li className="cursor-pointer hidden md:block relative" onClick={()=>{
+                        setNotifOpen(!notifOpen)
+                    }}>
+                        <NotificationsNoneRoundedIcon/>
+                         {notifOpen && <NotificationsContainer/>}
+                    </li>
                     <li className={style.list}>Hola, {userLogged}</li>    
                     <li className={style.list} onClick={handleLogOut}>Cerrar sesión</li>
                     <li className="md:hidden block my-2 mx-4">Notificaciones</li>
@@ -77,6 +84,7 @@ export default function NavBar(){
                 
             </ul>
         </nav>
+       
     </header>
     )
 }
