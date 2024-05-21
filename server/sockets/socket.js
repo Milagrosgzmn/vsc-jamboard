@@ -17,19 +17,15 @@ function setSocketServer (server){
         socket.on('code', async(data)=>{
             try {
                 const url = process.env.BACKURL || 'http://localhost:3001/jamboard/board'
-                let newBoard = {};
-                
-                if(data.language === 'xml') newBoard.html = data.code;
-                if(data.language === 'css') newBoard.css = data.code;
-                if(data.language === 'javascript') newBoard.js = data.code;
-            
-                await axios.put(`${url}/${data.id}`,{newBoard})
+               
+                await axios.put(`${url}/${data.id}`,{patch:data.patch})
+                io.emit(`${data.id}`,{ 
+                    patch:data.patch, 
+                    user:data.user})
             } catch (error) {
                 console.error(error);
                 return
             }
-            
-            io.emit(`${data.id}`, data)
         })
     })
 
