@@ -152,5 +152,20 @@ module.exports = (sequelize)=>{
               throw error;
           }
       }
+
+      Users.getNotifications = async function(id){
+        try {
+          
+          const user = await this.findByPk(id);
+          if (!user) throw Error('User not found');
+          const notif = await user.getReceiver({
+            attributes: { exclude: ['password', 'email'] }
+          });
+          return notif;
+        } catch (error) {
+          console.error("Error while retrieving data:", error.message);
+          throw error;
+        }
+      }
     return Users;
 }
